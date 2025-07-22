@@ -66,11 +66,20 @@ temperature_scaling = True # Setting this false disables brightness scaling when
 temperature_sample_rate = 5 #time in seconds to poll temperature sensor, not much benefit to reducing this (outside of testing)
 
 # LED BRIGHTNESS CONFIG
-# should probably update this so you can just declare one variable like `brightnesslevels = 4` and STEP, MIN_BRIGHTNESS, and MAX_BRIGHTNESS are calculated from that. This would allow you to easily go from 3 to 4 to 5 or even like 10 brightness levels without having to change a bunch of other variables. It might also break something even if you did all of that.
 BRIGHTNESS_LEVELS = 4
-STEP = 100 // BRIGHTNESS_LEVELS
-MIN_BRIGHTNESS = STEP
-MAX_BRIGHTNESS = STEP * (100 // STEP)
+# GAMMA is a scaling value for the brightness curve. 1 is flat. 2 shifts the curve lower. .5 shifts the curve higher.
+# example when BRIGHTNESS_LEVELS = 4: GAMMA 1 = [25, 50, 75, 100], GAMMA 2 = [6, 25, 56, 100], GAMMA .5 = [50, 70, 86, 100]
+GAMMA = 1.5
+
+
+# Use BRIGHTNESS_LEVELSand GAMMA to calculate an array of weighted percentages so that the progression between steps is visually even
+BRIGHTNESS_STEPS = [
+    int((i / BRIGHTNESS_LEVELS) ** GAMMA * 100)
+    for i in range(1, BRIGHTNESS_LEVELS + 1)
+]
+# Index for current perceptual brightness step
+brightness_index = 0
+
 FADE_DURATION = 0.25
 FADE_STEPS = 50
 last_temp_check = 0
@@ -89,7 +98,6 @@ MAX_TEMP = 50
 power_button_raw.threshold = 20000
 increase_button_raw.threshold = 20000
 decrease_button_raw.threshold = 20000
-
 
 #############
 # FUNCTIONS #
@@ -136,7 +144,7 @@ class AmbientBrightness:
 
 
 # SET INITIAL BRIGHTNESS
-user_brightness = Brightness(STEP)
+user_brightness = Brightness(BRIGHTNESS_STEPS[brightness_index])
 output_brightness = Brightness(0)
 ambient_brightness = AmbientBrightness(light_sensor, LIGHT_SENSOR_MIN, LIGHT_SENSOR_MAX)
 
@@ -164,23 +172,26 @@ def set_output_brightness(target_brightness, duration=FADE_DURATION):
     output_brightness = target_brightness
 
     # debugging
-    # print(f"Current brightness: {output_brightness.flat_percentage}% | DAC Output: {output_brightness.as_driver_output()}")
+    print(f"step: {BRIGHTNESS_STEPS[brightness_index]}%")
+    print(f"Current brightness: {output_brightness.flat_percentage}% | DAC Output: {output_brightness.as_driver_output()}")
 
+
+# Updated handle_auto_brightness() to use BRIGHTNESS_STEPS and brightness_index
 def handle_auto_brightness():
-    global user_brightness
+    global user_brightness, brightness_index
     ambient_percentage = ambient_brightness.get_brightness_percentage()
-    new_brightness = user_brightness.flat_percentage  # start with current brightness
 
     # debugging
-    # print(f"Comparing user brightness ({user_brightness.flat_percentage}) to ambient brightness ({ambient_brightness.get_brightness_percentage()}) at {ambient_brightness.sensor.lux}lux")
+    print(f"Comparing user brightness ({user_brightness.flat_percentage}) to ambient brightness ({ambient_brightness.get_brightness_percentage()}) at {ambient_brightness.sensor.lux}lux")
 
-    if ambient_percentage >= new_brightness + STEP:
-        new_brightness = min(new_brightness + STEP, MAX_BRIGHTNESS)
-    elif ambient_percentage <= new_brightness - STEP:
-        new_brightness = max(new_brightness - STEP, MIN_BRIGHTNESS)
-
-    if new_brightness != user_brightness.flat_percentage:
-        user_brightness = Brightness(new_brightness)
+    # step through perceptual indices based on ambient light
+    if brightness_index < len(BRIGHTNESS_STEPS) - 1 and ambient_percentage >= BRIGHTNESS_STEPS[brightness_index + 1]:
+        brightness_index += 1
+        user_brightness = Brightness(BRIGHTNESS_STEPS[brightness_index])
+        set_output_brightness(user_brightness)
+    elif brightness_index > 0 and ambient_percentage <= BRIGHTNESS_STEPS[brightness_index - 1]:
+        brightness_index -= 1
+        user_brightness = Brightness(BRIGHTNESS_STEPS[brightness_index])
         set_output_brightness(user_brightness)
 
 def handle_power_button():
@@ -202,19 +213,23 @@ def handle_power_button():
             #     print("Temperature too high to turn on the lamp")
 
 def handle_increase_button():
-    global user_brightness
+    global user_brightness, brightness_index
     increase_button.update()
 
     if increase_button.rose:
-        user_brightness = Brightness(min(user_brightness.flat_percentage + STEP, MAX_BRIGHTNESS))
+        # move up one perceptual step
+        brightness_index = min(brightness_index + 1, len(BRIGHTNESS_STEPS) - 1)
+        user_brightness = Brightness(BRIGHTNESS_STEPS[brightness_index])
         set_output_brightness(user_brightness)
 
 def handle_decrease_button():
-    global user_brightness
+    global user_brightness, brightness_index
     decrease_button.update()
 
     if decrease_button.rose:
-        user_brightness = Brightness(max(user_brightness.flat_percentage - STEP, MIN_BRIGHTNESS))
+        # move down one perceptual step
+        brightness_index = max(brightness_index - 1, 0)
+        user_brightness = Brightness(BRIGHTNESS_STEPS[brightness_index])
         set_output_brightness(user_brightness)
 
 def check_temperature():

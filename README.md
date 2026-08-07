@@ -1,10 +1,16 @@
 # The Open Task Light
 Components for making the Open Task Light. Learn more on [Youtube](https://www.youtube.com/channel/UCvnxvXWYcOlmhRFvZ_ISP8g).
 
-All designs are likely (probably guaranteed) to change. 3D models are updated regularly for education and experimentation but will almost certainly be updated, replaced, or removed in the future.
+The printable files are in the [STL folder](Open%20Task%20Light/Printed%20Parts/STL).
 
-Find us on [Discord](https://discord.gg/B43ZVcBme4)
+Future updates will include:
+- Project BOM
+- STEP files
+- Detail assembly instructions for user-made custom components (custom cables, etc)
+- Drawings and schematics for professionally manufactured custom components (sheet metal parts, PCBs)
 
 ---
-### NOTICE [MAY 2025]
-There have been lots of hardware updates over the past few months (especially in the electronics department). I would suggest holding off on buying anything from the parts list until the project is wrapped and the BOM is updated. Let me know if you have any specific questions about any components in the meantime.
+### NOTICE [AUGUST 2026]
+You may notice v1.0 updates starting to trickle in. I've removed out-of-date components to avoid confusion, so if you're looking for models/info from previous versions, you can find those in earlier commits. 
+---
+Find us on [Discord](https://discord.gg/B43ZVcBme4)

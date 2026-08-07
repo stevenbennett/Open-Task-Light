@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>URL</key>
+	<string>https://learn.adafruit.com/adafruit-qt-py-esp32-s2/update-tinyuf2-bootloader-for-circuitpython-10-4mb-boards-only</string>
+</dict>
+</plist>

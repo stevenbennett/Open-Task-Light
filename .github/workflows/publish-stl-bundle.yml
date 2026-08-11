@@ -1,0 +1,94 @@
+name: Publish STL bundle
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "Open Task Light/Printed Parts/STL/**/*.stl"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-stl-bundle
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Build STL bundle
+        id: bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          source_directory="Open Task Light/Printed Parts/STL"
+          archive="$RUNNER_TEMP/Open-Task-Light-STLs.zip"
+          file_list="$RUNNER_TEMP/stl-files.txt"
+
+          cd "$source_directory"
+          find . -type f -iname '*.stl' -print | LC_ALL=C sort > "$file_list"
+          file_count="$(wc -l < "$file_list" | tr -d ' ')"
+
+          if [[ "$file_count" == "0" ]]; then
+            echo "No STL files found in $source_directory" >&2
+            exit 1
+          fi
+
+          zip -q "$archive" -@ < "$file_list"
+
+          short_sha="${GITHUB_SHA::7}"
+          release_date="$(date -u +%Y-%m-%d)"
+          release_title_date="$(date -u '+%B %-d, %Y')"
+
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+          echo "asset_name=Open-Task-Light-STLs.zip" >> "$GITHUB_OUTPUT"
+          echo "file_count=$file_count" >> "$GITHUB_OUTPUT"
+          echo "short_sha=$short_sha" >> "$GITHUB_OUTPUT"
+          echo "tag=stl-$release_date-$short_sha" >> "$GITHUB_OUTPUT"
+          echo "title=STL Bundle — $release_title_date" >> "$GITHUB_OUTPUT"
+
+      - name: Publish release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARCHIVE: ${{ steps.bundle.outputs.archive }}
+          ASSET_NAME: ${{ steps.bundle.outputs.asset_name }}
+          FILE_COUNT: ${{ steps.bundle.outputs.file_count }}
+          SHORT_SHA: ${{ steps.bundle.outputs.short_sha }}
+          TAG: ${{ steps.bundle.outputs.tag }}
+          TITLE: ${{ steps.bundle.outputs.title }}
+        run: |
+          set -euo pipefail
+
+          printf -v notes '%s\n\n%s\n\n%s' \
+            "Automatically generated from commit $SHORT_SHA: https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA" \
+            "Includes all $FILE_COUNT STL files from Open Task Light/Printed Parts/STL, organized in their repository folders." \
+            "Individual model versions are included in the filenames."
+
+          if release_json="$(gh release view "$TAG" --json assets,isDraft 2>/dev/null)"; then
+            if jq -e --arg asset "$ASSET_NAME" '.assets | any(.name == $asset)' <<< "$release_json" >/dev/null; then
+              echo "Release $TAG already contains $ASSET_NAME."
+            else
+              gh release upload "$TAG" "$ARCHIVE#Download all STL files"
+            fi
+
+            if jq -e '.isDraft' <<< "$release_json" >/dev/null; then
+              gh release edit "$TAG" --draft=false --latest
+            else
+              gh release edit "$TAG" --latest
+            fi
+          else
+            gh release create "$TAG" \
+              "$ARCHIVE#Download all STL files" \
+              --target "$GITHUB_SHA" \
+              --title "$TITLE" \
+              --notes "$notes" \
+              --latest
+          fi

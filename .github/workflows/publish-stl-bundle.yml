@@ -67,10 +67,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          printf -v notes '%s\n\n%s\n\n%s' \
-            "Automatically generated from commit $SHORT_SHA: https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA" \
-            "Includes all $FILE_COUNT STL files from Open Task Light/Printed Parts/STL, organized in their repository folders." \
-            "Individual model versions are included in the filenames."
+          printf -v notes '%s' \
+            "Includes $FILE_COUNT STL files from Open Task Light/Printed Parts/STL from commit [$SHORT_SHA](https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA)."
 
           if release_json="$(gh release view "$TAG" --json assets,isDraft 2>/dev/null)"; then
             if jq -e --arg asset "$ASSET_NAME" '.assets | any(.name == $asset)' <<< "$release_json" >/dev/null; then

@@ -44,8 +44,8 @@ jobs:
           zip -q "$archive" -@ < "$file_list"
 
           short_sha="${GITHUB_SHA::7}"
-          release_date="$(date -u +%Y-%m-%d)"
-          release_title_date="$(date -u '+%B %-d, %Y')"
+          release_date="$(TZ=America/Chicago date +%Y-%m-%d)"
+          release_title_date="$(TZ=America/Chicago date '+%B %-d, %Y')"
 
           echo "archive=$archive" >> "$GITHUB_OUTPUT"
           echo "asset_name=Open-Task-Light-STLs.zip" >> "$GITHUB_OUTPUT"

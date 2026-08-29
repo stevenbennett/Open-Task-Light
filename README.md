@@ -5,7 +5,6 @@ The printable files are in the [STL folder](Open%20Task%20Light/Printed%20Parts/
 
 Future updates will include:
 - Project BOM
-- STEP files
 - Detail assembly instructions for user-made custom components (custom cables, etc)
 - Drawings and schematics for professionally manufactured custom components (sheet metal parts, PCBs)
 

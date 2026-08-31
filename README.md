@@ -7,8 +7,5 @@ Future updates will include:
 - Detail assembly instructions for user-made custom components (custom cables, etc)
 - Drawings and schematics for professionally manufactured custom components (sheet metal parts and PCBs)
 
----
-### NOTICE [AUGUST 2026]
-You may notice v1.0 updates starting to trickle in. I've removed out-of-date components to avoid confusion, so if you're looking for models/info from previous versions, you can find those in earlier commits. 
----
 Find us on [Discord](https://discord.gg/B43ZVcBme4)
+Support me on [Patreon](https://www.patreon.com/StevenBennett)

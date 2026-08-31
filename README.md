@@ -1,12 +1,11 @@
 # The Open Task Light
 Components for making the Open Task Light. Learn more on [Youtube](https://www.youtube.com/channel/UCvnxvXWYcOlmhRFvZ_ISP8g).
 
-The printable files are in the [STL folder](Open%20Task%20Light/Printed%20Parts/STL).
+Assembly, printing, and sourcing guide: https://open-task-light.gitbook.io/open-task-light
 
 Future updates will include:
-- Project BOM
 - Detail assembly instructions for user-made custom components (custom cables, etc)
-- Drawings and schematics for professionally manufactured custom components (sheet metal parts, PCBs)
+- Drawings and schematics for professionally manufactured custom components (sheet metal parts and PCBs)
 
 ---
 ### NOTICE [AUGUST 2026]

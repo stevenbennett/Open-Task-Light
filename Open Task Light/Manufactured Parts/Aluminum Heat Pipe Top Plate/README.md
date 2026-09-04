@@ -2,9 +2,11 @@
 
 This directory contains the DXF for manufacturing the aluminum heat pipe top plate.
 
+The part is intended to be laser cut. Services such as [SendCutSend](https://sendcutsend.com/) and [OSH Cut](https://oshcut.com/) can quote the part directly from the DXF.
+
 > **Secondary operation required:** Tap the two smaller holes M3 x 0.5 after cutting. This can be done by the cutting service or by hand. The DXF contains the pilot-hole geometry, not finished threaded holes.
 
 - [Download the DXF](aluminum-heat-pipe-top-plate.dxf)
-- [View manufacturing guidance in GitBook](https://open-task-light.gitbook.io/open-task-light/self-sourcing-guide/part-preparation/aluminum-heat-pipe-top-plate)
+- [View manufacturing guidance in GitBook](https://open-task-light.gitbook.io/open-task-light/self-sourcing-guide/custom-manufactured-parts/aluminum-heat-pipe-top-plate)
 
 Review the material, thickness, secondary operations, and other specifications in GitBook before ordering the part. The DXF alone does not define the complete finished part.

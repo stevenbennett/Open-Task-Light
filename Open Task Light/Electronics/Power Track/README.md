@@ -2,7 +2,7 @@
 
 The Power Track is the long, two-conductor PCB that carries 24V along the Open Task Light rails.
 
-For fabrication details, required parts, and assembly instructions, see the [Electronics section](https://open-task-light.gitbook.io/open-task-light/self-sourcing-guide/electronics) of the Open Task Light GitBook.
+For fabrication details, required parts, and assembly instructions, see the [Power Track guide](https://open-task-light.gitbook.io/open-task-light/self-sourcing-guide/custom-manufactured-parts/power-track) in the Open Task Light GitBook.
 
 ## Files
 

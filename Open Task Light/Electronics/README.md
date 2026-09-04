@@ -11,4 +11,4 @@ Design source, bills of materials, and manufacturing files for the custom PCBs u
 - Control Board
 - Power Link
 
-For fabrication guidance and assembly instructions, see the [Electronics section](https://open-task-light.gitbook.io/open-task-light/self-sourcing-guide/electronics) of the Open Task Light GitBook. Check the guide before ordering boards or assembling the electronics.
+For fabrication guidance and assembly instructions, see the [Custom Manufactured Parts section](https://open-task-light.gitbook.io/open-task-light/self-sourcing-guide/custom-manufactured-parts) of the Open Task Light GitBook. Check the guide before ordering boards or assembling the electronics.

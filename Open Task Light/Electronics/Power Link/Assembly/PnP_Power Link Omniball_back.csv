@@ -1,0 +1,5 @@
+Name,X,Y,Angle,Value,Package
+PIN5,-1.27,-7.00,180.00,"OmniBall SMD Contact",MILL_MAX_0945_SMD
+PIN6,1.27,-9.54,180.00,"OmniBall SMD Contact",MILL_MAX_0945_SMD
+PIN7,-1.27,-12.08,180.00,"OmniBall SMD Contact",MILL_MAX_0945_SMD
+PIN8,1.27,-14.62,180.00,"OmniBall SMD Contact",MILL_MAX_0945_SMD

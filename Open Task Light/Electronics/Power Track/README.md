@@ -8,6 +8,6 @@ For fabrication details, required parts, and assembly instructions, see the [Pow
 
 - `power-track-gerbers.zip` contains the Gerber and drill files required to order the bare PCB.
 - `Source/Power Track.brd` and `Source/Power Track.sch` are the editable Autodesk Fusion Electronics source files.
-- `power-track-bom.csv` lists the parts required to assemble the PCB.
+- `Assembly/power-track-bom.csv` is the Fusion Electronics BOM for the two parts installed on the PCB.
 
 The Gerber package does not include pick-and-place data because the Power Track is intended to be assembled by hand. Confirm the board outline, holes, and exposed contact areas in your PCB manufacturer's preview before ordering.

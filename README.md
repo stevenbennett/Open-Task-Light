@@ -1,7 +1,9 @@
 # The Open Task Light
 Components for making the Open Task Light. Learn more on [Youtube](https://www.youtube.com/channel/UCvnxvXWYcOlmhRFvZ_ISP8g).
 
-Assembly, printing, and sourcing guide: https://open-task-light.gitbook.io/open-task-light
+## Build guide
+
+**[Open the assembly, printing, and sourcing guide →](https://open-task-light.gitbook.io/open-task-light)**
 
 Order a kit and/or parts: [opentasklight.com](https://opentasklight.com/)
 

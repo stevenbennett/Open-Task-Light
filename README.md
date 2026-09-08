@@ -4,6 +4,8 @@ An open-source desk lamp designed to be extended, repaired, and remade.
 
 ![Open Task Light](https://opentasklight.com/cdn/shop/files/Capture_One_Catalog0106.jpg?v=1776456987&width=1600)
 
+> **Before you start:** The Open Task Light is a challenging, hands-on project. A complete build involves more than 20 printed parts, careful assembly, and some thoughtful tuning along the way. This is not a “hit print and wait” project. It helps to think of the printer less like a magic part replicator and more like a tool that needs to be understood and occasionally wrangled. Every printer behaves a little differently, so expect to calibrate, inspect, and sometimes reprint parts as you work toward the right fit and strength. If that kind of hands-on problem-solving sounds rewarding, you'll probably enjoy the build! Just come prepared to give it some patience and attention. You got this!
+
 ## Build an Open Task Light
 
 Choose your build:
@@ -12,9 +14,6 @@ Choose your build:
 - **[Source the parts yourself](https://open-task-light.gitbook.io/open-task-light/self-sourcing-guide)** — Use the bills of materials and preparation guides to source, manufacture, and prepare your complete build.
 
 **[Open the complete printing and assembly guide →](https://open-task-light.gitbook.io/open-task-light)**
-
-> **Follow the printing guide closely.** The parts rely on specific materials, orientations, supports, and print settings for proper fit and strength. Review the instructions for each part before slicing it; a print that looks acceptable may still cause fit or assembly problems.
-
 
 ## Repository contents
 

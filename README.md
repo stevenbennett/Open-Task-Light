@@ -1,20 +1,36 @@
 # The Open Task Light
-Components for making the Open Task Light. Learn more on [Youtube](https://www.youtube.com/channel/UCvnxvXWYcOlmhRFvZ_ISP8g).
 
-## Build guide
+An open-source desk lamp designed to be extended, repaired, and remade.
 
-**[Open the assembly, printing, and sourcing guide →](https://open-task-light.gitbook.io/open-task-light)**
+## Build an Open Task Light
 
-Order a kit and/or parts: [opentasklight.com](https://opentasklight.com/)
+Choose your build:
+
+- **[Build from a hardware kit](https://opentasklight.com/products/open-task-light-hardware-kit)** — Start with all the hardware you need, print the required parts, and follow the assembly guide.
+- **[Source the parts yourself](https://open-task-light.gitbook.io/open-task-light/self-sourcing-guide)** — Use the bills of materials and preparation guides to source, manufacture, and prepare your complete build.
+
+**[Open the complete printing and assembly guide →](https://open-task-light.gitbook.io/open-task-light)**
+
+> **Follow the printing guide closely.** The parts rely on specific materials, orientations, supports, and print settings for proper fit and strength. Review the instructions for each part before slicing it; a print that looks acceptable may still cause fit or assembly problems.
+
+
+## Repository contents
+
+This repository contains the 3D models, electronics files, bills of materials, and manufacturing files used to build the Open Task Light.
+
+## Project status
+
+Planned additions include:
+
+- Detailed assembly and preparation instructions for custom cables and processed parts such as the V-slot rails, turntable bearing, and QT Py.
+- Drawings and schematics for professionally manufactured components, including sheet-metal parts and PCBs.
 
 ## Important design constraint
 
 > **The horizontal arm is intentionally non-reversible.** This is a deliberate constraint related to the patent landscape surrounding this type of mechanism. Proposals to make the arm reversible will not be accepted into this project.
 
-Future updates will include:
+## Community
 
-- Detail assembly and preparation instructions for custom components like cables and processed parts like the v-slot rails, the turntable bearing, and the QT Py.
-- **Drawings and schematics for professionally manufactured custom components (sheet metal parts and PCBs)**
-
-Find us on [Discord](https://discord.gg/B43ZVcBme4)
-Support me on [Patreon](https://www.patreon.com/StevenBennett)
+- [Watch the project on YouTube](https://www.youtube.com/channel/UCvnxvXWYcOlmhRFvZ_ISP8g)
+- [Join the Discord](https://discord.gg/B43ZVcBme4)
+- [Support the project on Patreon](https://www.patreon.com/StevenBennett)

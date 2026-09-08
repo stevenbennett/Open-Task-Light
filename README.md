@@ -1,4 +1,4 @@
-# The Open Task Light
+# Open Task Light
 
 An open-source desk lamp designed to be extended, repaired, and remade.
 

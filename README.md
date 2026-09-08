@@ -2,6 +2,8 @@
 
 An open-source desk lamp designed to be extended, repaired, and remade.
 
+![Open Task Light](https://opentasklight.com/cdn/shop/files/Capture_One_Catalog0106.jpg?v=1776456987&width=1600)
+
 ## Build an Open Task Light
 
 Choose your build:

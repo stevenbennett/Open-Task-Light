@@ -33,7 +33,7 @@ Planned additions include:
 
 ## More on the project
 
-- ["Sliding Into Perfection: The Open Task Light" — Hackaday](https://hackaday.com/2026/09/01/sliding-into-perfection-the-open-task-light)
+- [Sliding Into Perfection: The Open Task Light — Hackaday](https://hackaday.com/2026/09/01/sliding-into-perfection-the-open-task-light)
 - [Building the Open Task Light — James Vaughan](https://jamesbvaughan.com/open-task-light)
 
 ## Community

@@ -187,7 +187,7 @@
 <description>&lt;Connector Header Through Hole, Right Angle 2 position 0.049" (1.25mm)&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by SamacSys&lt;/author&gt;</description>
 <packages>
-<package name="2200980271" library_version="8">
+<package name="2200980271" library_version="12">
 <description>&lt;b&gt;220098-0271-3&lt;/b&gt;&lt;br&gt;
 </description>
 <pad name="1" x="-0.625" y="2.8" drill="0.6" diameter="1" shape="square"/>
@@ -212,7 +212,7 @@
 </package>
 </packages>
 </library>
-<library name="ROUND SPACER M3 STEEL 2" urn="urn:adsk.wipprod:fs.file:vf.OljqTMRBRcqdr2rPhi7ygQ">
+<library name="ROUND SPACER M3 STEEL 2.50MM" urn="urn:adsk.wipprod:fs.file:vf.OljqTMRBRcqdr2rPhi7ygQ">
 <description>&lt;BR&gt;Wurth Elektronik - Automotive - Assembly - WE-SMSA&lt;br&gt;&lt;Hr&gt;
 
 &lt;BR&gt;
@@ -284,7 +284,7 @@ Please contact us for more information.&lt;br&gt;
 &lt;HR&gt;
 Copyright: Würth Elektronik</description>
 <packages>
-<package name="WE-SMSA_78614020360" urn="urn:adsk.eagle:footprint:14321783/5" library_version="2">
+<package name="WE-SMSA_78614020360" urn="urn:adsk.eagle:footprint:14321783/5" library_version="6">
 <description>&lt;B&gt;WWE-SMSA SMT Spacer Studs Automotive
 &lt;BR&gt;&lt;/B&gt;Thread M3
 &lt;br&gt;Pin Length= 2mm</description>
@@ -1042,7 +1042,7 @@ Copyright: Würth Elektronik</description>
 </library>
 <library name="Power Track Pads" urn="urn:adsk.wipprod:fs.file:vf.ecLPPA_xR2C4rnfr6W4XRw">
 <packages>
-<package name="POWER-TRACK-PADS" library_version="41">
+<package name="POWER-TRACK-PADS" library_version="43">
 <smd name="GND" x="-1.524" y="-1.143" dx="2.032" dy="2.286" layer="1" thermals="no"/>
 <smd name="24V" x="1.524" y="-1.143" dx="2.032" dy="2.286" layer="1" thermals="no"/>
 <rectangle x1="-2.54" y1="-416.687" x2="-0.508" y2="-1.905" layer="1"/>
@@ -1056,6 +1056,7 @@ Copyright: Würth Elektronik</description>
 <attributes>
 </attributes>
 <variantdefs>
+<variantdef name="Production"/>
 </variantdefs>
 <classes>
 <class number="0" name="default" width="0" drill="0">
@@ -1245,22 +1246,18 @@ design rules under a new name.</description>
 </pass>
 </autorouter>
 <elements>
-<element name="J1" library="molex-right-angle-220098-0271" library_urn="urn:adsk.wipprod:fs.file:vf.oH1rBRzZQjGkHvqZg5Po9g" package="2200980271" value="220098-0271" x="0" y="213.995" smashed="yes" rot="R180">
-<attribute name="ARROW_PART_NUMBER" value="" x="0" y="213.995" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="ARROW_PRICE-STOCK" value="" x="0" y="213.995" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="DESCRIPTION" value="Connector Header Through Hole, Right Angle 2 position 0.049&quot; (1.25mm)" x="0" y="213.995" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="HEIGHT" value="4.05mm" x="0" y="213.995" size="1.778" layer="27" rot="R180" display="off"/>
+<element name="J1" library="molex-right-angle-220098-0271" library_urn="urn:adsk.wipprod:fs.file:vf.oH1rBRzZQjGkHvqZg5Po9g" package="2200980271" value="2200980271" base_value="2200980271" x="0" y="213.995" smashed="yes" rot="R180">
+<attribute name="DATASHEET" value="https://www.molex.com/en-us/products/part-detail-pdf/2200980271?display=pdf" x="0" y="213.995" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MANUFACTURER" value="Molex" x="0" y="213.995" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MOUSER_PART_NUMBER" value="538-220098-0271" x="0" y="213.995" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MOUSER_PRICE-STOCK" value="https://www.mouser.co.uk/ProductDetail/Molex/220098-0271?qs=mELouGlnn3fRzHRZ40buew%3D%3D" x="0" y="213.995" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MPN" value="220098-0271" x="0" y="213.995" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="MPN" value="2200980271" x="0" y="213.995" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
-<element name="MP1" library="ROUND SPACER M3 STEEL 2" library_urn="urn:adsk.wipprod:fs.file:vf.OljqTMRBRcqdr2rPhi7ygQ" package="WE-SMSA_78614020360" value="WE-SMSA_3.3MMDEFAULT" x="0" y="-211.06" smashed="yes" rot="MR180">
+<element name="MP1" library="ROUND SPACER M3 STEEL 2.50MM" library_urn="urn:adsk.wipprod:fs.file:vf.OljqTMRBRcqdr2rPhi7ygQ" package="WE-SMSA_78614020360" value="78614025360" base_value="78614025360" x="0" y="-211.06" smashed="yes" rot="MR180">
+<attribute name="DATASHEET" value="https://www.we-online.com/components/products/datasheet/78614025360.pdf" x="0" y="-211.06" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="DESCRIPTION" value="M3 solderable SMD standoff" x="0" y="-211.06" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MANUFACTURER" value="Würth Elektronik" x="0" y="-211.06" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="78614025360" x="0" y="-211.06" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
-<element name="CONTACT_PADS" library="Power Track Pads" library_urn="urn:adsk.wipprod:fs.file:vf.ecLPPA_xR2C4rnfr6W4XRw" package="POWER-TRACK-PADS" value="POWERTRACKPAD" x="0" y="209.5" smashed="yes">
+<element name="CONTACT_PADS" library="Power Track Pads" library_urn="urn:adsk.wipprod:fs.file:vf.ecLPPA_xR2C4rnfr6W4XRw" package="POWER-TRACK-PADS" value="POWERTRACKPAD" base_value="POWERTRACKPAD" x="0" y="209.5" smashed="yes">
 </element>
 </elements>
 <signals>

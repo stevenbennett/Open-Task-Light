@@ -109,7 +109,7 @@
 <libraries>
 <library name="MILL_MAX_0945_SMD" urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw">
 <packages>
-<package name="MILL_MAX_0945_SMD" library_version="5">
+<package name="MILL_MAX_0945_SMD" library_version="8">
 <smd name="P$1" x="0" y="0" dx="3.25" dy="3.25" layer="1" roundness="100"/>
 </package>
 </packages>
@@ -307,85 +307,45 @@ design rules under a new name.</description>
 </pass>
 </autorouter>
 <elements>
-<element name="PIN1" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="OmniBall SMD Contact" x="7" y="1.27" smashed="yes">
-<attribute name="CATEGORY_L1" value="" x="7" y="1.27" size="1.778" layer="27" display="off"/>
-<attribute name="CATEGORY_L2" value="" x="7" y="1.27" size="1.778" layer="27" display="off"/>
-<attribute name="DATASHEET" value="" x="7" y="1.27" size="1.778" layer="27" display="off"/>
+<element name="PIN1" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="0945-0-15-20-09-14-11-0" base_value="0945-0-15-20-09-14-11-0" x="7" y="1.27" smashed="yes">
+<attribute name="DATASHEET" value="https://www.mill-max.com/assets/pdfs/0945.pdf" x="7" y="1.27" size="1.778" layer="27" display="off"/>
 <attribute name="MANUFACTURER" value="Mill-Max" x="7" y="1.27" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="0945-0-15-20-09-14-11-0" x="7" y="1.27" size="1.778" layer="27" display="off"/>
-<attribute name="PACKAGE" value="" x="7" y="1.27" size="1.778" layer="27" display="off"/>
-<attribute name="VENDOR" value="" x="7" y="1.27" size="1.778" layer="27" display="off"/>
-<attribute name="VPN" value="" x="7" y="1.27" size="1.778" layer="27" display="off"/>
 </element>
-<element name="PIN2" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="OmniBall SMD Contact" x="9.54" y="-1.27" smashed="yes">
-<attribute name="CATEGORY_L1" value="" x="9.54" y="-1.27" size="1.778" layer="27" display="off"/>
-<attribute name="CATEGORY_L2" value="" x="9.54" y="-1.27" size="1.778" layer="27" display="off"/>
-<attribute name="DATASHEET" value="" x="9.54" y="-1.27" size="1.778" layer="27" display="off"/>
+<element name="PIN2" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="0945-0-15-20-09-14-11-0" base_value="0945-0-15-20-09-14-11-0" x="9.54" y="-1.27" smashed="yes">
+<attribute name="DATASHEET" value="https://www.mill-max.com/assets/pdfs/0945.pdf" x="9.54" y="-1.27" size="1.778" layer="27" display="off"/>
 <attribute name="MANUFACTURER" value="Mill-Max" x="9.54" y="-1.27" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="0945-0-15-20-09-14-11-0" x="9.54" y="-1.27" size="1.778" layer="27" display="off"/>
-<attribute name="PACKAGE" value="" x="9.54" y="-1.27" size="1.778" layer="27" display="off"/>
-<attribute name="VENDOR" value="" x="9.54" y="-1.27" size="1.778" layer="27" display="off"/>
-<attribute name="VPN" value="" x="9.54" y="-1.27" size="1.778" layer="27" display="off"/>
 </element>
-<element name="PIN3" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="OmniBall SMD Contact" x="12.08" y="1.27" smashed="yes">
-<attribute name="CATEGORY_L1" value="" x="12.08" y="1.27" size="1.778" layer="27" display="off"/>
-<attribute name="CATEGORY_L2" value="" x="12.08" y="1.27" size="1.778" layer="27" display="off"/>
-<attribute name="DATASHEET" value="" x="12.08" y="1.27" size="1.778" layer="27" display="off"/>
+<element name="PIN3" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="0945-0-15-20-09-14-11-0" base_value="0945-0-15-20-09-14-11-0" x="12.08" y="1.27" smashed="yes">
+<attribute name="DATASHEET" value="https://www.mill-max.com/assets/pdfs/0945.pdf" x="12.08" y="1.27" size="1.778" layer="27" display="off"/>
 <attribute name="MANUFACTURER" value="Mill-Max" x="12.08" y="1.27" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="0945-0-15-20-09-14-11-0" x="12.08" y="1.27" size="1.778" layer="27" display="off"/>
-<attribute name="PACKAGE" value="" x="12.08" y="1.27" size="1.778" layer="27" display="off"/>
-<attribute name="VENDOR" value="" x="12.08" y="1.27" size="1.778" layer="27" display="off"/>
-<attribute name="VPN" value="" x="12.08" y="1.27" size="1.778" layer="27" display="off"/>
 </element>
-<element name="PIN4" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="OmniBall SMD Contact" x="14.62" y="-1.27" smashed="yes">
-<attribute name="CATEGORY_L1" value="" x="14.62" y="-1.27" size="1.778" layer="27" display="off"/>
-<attribute name="CATEGORY_L2" value="" x="14.62" y="-1.27" size="1.778" layer="27" display="off"/>
-<attribute name="DATASHEET" value="" x="14.62" y="-1.27" size="1.778" layer="27" display="off"/>
+<element name="PIN4" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="0945-0-15-20-09-14-11-0" base_value="0945-0-15-20-09-14-11-0" x="14.62" y="-1.27" smashed="yes">
+<attribute name="DATASHEET" value="https://www.mill-max.com/assets/pdfs/0945.pdf" x="14.62" y="-1.27" size="1.778" layer="27" display="off"/>
 <attribute name="MANUFACTURER" value="Mill-Max" x="14.62" y="-1.27" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="0945-0-15-20-09-14-11-0" x="14.62" y="-1.27" size="1.778" layer="27" display="off"/>
-<attribute name="PACKAGE" value="" x="14.62" y="-1.27" size="1.778" layer="27" display="off"/>
-<attribute name="VENDOR" value="" x="14.62" y="-1.27" size="1.778" layer="27" display="off"/>
-<attribute name="VPN" value="" x="14.62" y="-1.27" size="1.778" layer="27" display="off"/>
 </element>
-<element name="PIN6" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="OmniBall SMD Contact" x="1.27" y="-9.54" smashed="yes" rot="MR180">
-<attribute name="CATEGORY_L1" value="" x="1.27" y="-9.54" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="CATEGORY_L2" value="" x="1.27" y="-9.54" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="DATASHEET" value="" x="1.27" y="-9.54" size="1.778" layer="28" rot="MR180" display="off"/>
+<element name="PIN6" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="0945-0-15-20-09-14-11-0" base_value="0945-0-15-20-09-14-11-0" x="1.27" y="-9.54" smashed="yes" rot="MR180">
+<attribute name="DATASHEET" value="https://www.mill-max.com/assets/pdfs/0945.pdf" x="1.27" y="-9.54" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MANUFACTURER" value="Mill-Max" x="1.27" y="-9.54" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="0945-0-15-20-09-14-11-0" x="1.27" y="-9.54" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="PACKAGE" value="" x="1.27" y="-9.54" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="VENDOR" value="" x="1.27" y="-9.54" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="VPN" value="" x="1.27" y="-9.54" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
-<element name="PIN5" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="OmniBall SMD Contact" x="-1.27" y="-7" smashed="yes" rot="MR180">
-<attribute name="CATEGORY_L1" value="" x="-4.745" y="-3.525" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="CATEGORY_L2" value="" x="-4.745" y="-3.525" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="DATASHEET" value="" x="-4.745" y="-3.525" size="1.778" layer="28" rot="MR180" display="off"/>
+<element name="PIN5" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="0945-0-15-20-09-14-11-0" base_value="0945-0-15-20-09-14-11-0" x="-1.27" y="-7" smashed="yes" rot="MR180">
+<attribute name="DATASHEET" value="https://www.mill-max.com/assets/pdfs/0945.pdf" x="-4.745" y="-3.525" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MANUFACTURER" value="Mill-Max" x="-4.745" y="-3.525" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="0945-0-15-20-09-14-11-0" x="-4.745" y="-3.525" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="PACKAGE" value="" x="-4.745" y="-3.525" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="VENDOR" value="" x="-4.745" y="-3.525" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="VPN" value="" x="-4.745" y="-3.525" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
-<element name="PIN7" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="OmniBall SMD Contact" x="-1.27" y="-12.08" smashed="yes" rot="MR180">
-<attribute name="CATEGORY_L1" value="" x="-1.27" y="-8.605" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="CATEGORY_L2" value="" x="-1.27" y="-8.605" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="DATASHEET" value="" x="-1.27" y="-8.605" size="1.778" layer="28" rot="MR180" display="off"/>
+<element name="PIN7" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="0945-0-15-20-09-14-11-0" base_value="0945-0-15-20-09-14-11-0" x="-1.27" y="-12.08" smashed="yes" rot="MR180">
+<attribute name="DATASHEET" value="https://www.mill-max.com/assets/pdfs/0945.pdf" x="-1.27" y="-8.605" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MANUFACTURER" value="Mill-Max" x="-1.27" y="-8.605" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="0945-0-15-20-09-14-11-0" x="-1.27" y="-8.605" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="PACKAGE" value="" x="-1.27" y="-8.605" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="VENDOR" value="" x="-1.27" y="-8.605" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="VPN" value="" x="-1.27" y="-8.605" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
-<element name="PIN8" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="OmniBall SMD Contact" x="1.27" y="-14.62" smashed="yes" rot="MR180">
-<attribute name="CATEGORY_L1" value="" x="-2.205" y="-7.67" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="CATEGORY_L2" value="" x="-2.205" y="-7.67" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="DATASHEET" value="" x="-2.205" y="-7.67" size="1.778" layer="28" rot="MR180" display="off"/>
+<element name="PIN8" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" package="MILL_MAX_0945_SMD" value="0945-0-15-20-09-14-11-0" base_value="0945-0-15-20-09-14-11-0" x="1.27" y="-14.62" smashed="yes" rot="MR180">
+<attribute name="DATASHEET" value="https://www.mill-max.com/assets/pdfs/0945.pdf" x="-2.205" y="-7.67" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MANUFACTURER" value="Mill-Max" x="-2.205" y="-7.67" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="0945-0-15-20-09-14-11-0" x="-2.205" y="-7.67" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="PACKAGE" value="" x="-2.205" y="-7.67" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="VENDOR" value="" x="-2.205" y="-7.67" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="VPN" value="" x="-2.205" y="-7.67" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 </elements>
 <signals>

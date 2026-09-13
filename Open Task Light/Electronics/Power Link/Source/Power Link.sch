@@ -76,7 +76,7 @@
 <libraries>
 <library name="MILL_MAX_0945_SMD" urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw">
 <packages>
-<package name="MILL_MAX_0945_SMD" library_version="5">
+<package name="MILL_MAX_0945_SMD" library_version="8">
 <smd name="P$1" x="0" y="0" dx="3.25" dy="3.25" layer="1" roundness="100"/>
 </package>
 </packages>
@@ -86,7 +86,8 @@
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="0945-0-15-20-09-14-11-0" library_version="5">
+<deviceset name="0945-0-15-20-09-14-11-0" uservalue="yes" library_version="8">
+<description>Surface Mount Spring-Loaded Pin</description>
 <gates>
 <gate name="G$1" symbol="OMNIBALL_CONTACT" x="0" y="0"/>
 </gates>
@@ -97,15 +98,9 @@
 </connects>
 <technologies>
 <technology name="">
-<attribute name="CATEGORY_L1" value="" constant="no"/>
-<attribute name="DATASHEET" value="" constant="no"/>
+<attribute name="DATASHEET" value="https://www.mill-max.com/assets/pdfs/0945.pdf" constant="no"/>
 <attribute name="MANUFACTURER" value="Mill-Max" constant="no"/>
-<attribute name="CATEGORY_L2" value="" constant="no"/>
 <attribute name="MPN" value="0945-0-15-20-09-14-11-0" constant="no"/>
-<attribute name="VALUE" value="OmniBall SMD Contact" constant="no"/>
-<attribute name="VENDOR" value="" constant="no"/>
-<attribute name="VPN" value="" constant="no"/>
-<attribute name="PACKAGE" value="" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -123,14 +118,14 @@
 </class>
 </classes>
 <parts>
-<part name="PIN1" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="OmniBall SMD Contact"/>
-<part name="PIN2" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="OmniBall SMD Contact"/>
-<part name="PIN3" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="OmniBall SMD Contact"/>
-<part name="PIN4" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="OmniBall SMD Contact"/>
-<part name="PIN6" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="OmniBall SMD Contact"/>
-<part name="PIN5" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="OmniBall SMD Contact"/>
-<part name="PIN7" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="OmniBall SMD Contact"/>
-<part name="PIN8" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="OmniBall SMD Contact"/>
+<part name="PIN1" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="0945-0-15-20-09-14-11-0"/>
+<part name="PIN2" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="0945-0-15-20-09-14-11-0"/>
+<part name="PIN3" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="0945-0-15-20-09-14-11-0"/>
+<part name="PIN4" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="0945-0-15-20-09-14-11-0"/>
+<part name="PIN6" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="0945-0-15-20-09-14-11-0"/>
+<part name="PIN5" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="0945-0-15-20-09-14-11-0"/>
+<part name="PIN7" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="0945-0-15-20-09-14-11-0"/>
+<part name="PIN8" library="MILL_MAX_0945_SMD" library_urn="urn:adsk.wipprod:fs.file:vf.dSKtJUQlTnqB1DVnww3Itw" deviceset="0945-0-15-20-09-14-11-0" device="" value="0945-0-15-20-09-14-11-0"/>
 </parts>
 <sheets>
 <sheet>

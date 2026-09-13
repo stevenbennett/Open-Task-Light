@@ -15,4 +15,4 @@ For fabrication details, required parts, and assembly instructions, see the [Con
 
 Upload the Gerber ZIP when ordering the bare PCB. If using an assembly service, you may need to reformat the BOM and placement files to meet the manufacturer's requirements.
 
-The Adafruit QT Py ESP32-S2 is sourced separately and plugs into the two Samtec receptacles after the Control Board is assembled. Confirm the board outline, holes, component positions, board sides, rotations, and component polarity in the manufacturer's preview before ordering.
+The Adafruit QT Py ESP32-S2 is sourced separately and plugs into the headers after the Control Board is assembled. Confirm the board outline, holes, component positions, board sides, rotations, and component polarity in the manufacturer's preview before ordering.

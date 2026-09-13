@@ -1,0 +1,1 @@
+The is an ESPHome port of the firmware.  It maintains the same behavior with buttons, light and temperature sensors.  Thanks for ESPHome you'll be able to control the lamp from Home Assistant,  monitor the sensors (temperature and light) and flash updates remotely.

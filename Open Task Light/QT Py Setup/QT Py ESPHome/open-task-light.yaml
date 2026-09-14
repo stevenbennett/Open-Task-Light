@@ -1,0 +1,733 @@
+﻿# Enable logging
+logger:
+  level: INFO
+
+#debug:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "OTL Fallback Hotspot"
+    password: "Hl903MHuFqXO"
+
+captive_portal:
+
+
+esp32:
+  board: adafruit_qtpy_esp32s2
+  framework:
+    type: arduino # Switching from esp-idf for better hardware compatibility
+
+esphome:
+  name: "open-task-light"
+  # Boot Safety: Initialize DAC to "Mute" voltage (2.7V → DAC value 255 because output is inverted)
+  # at the highest possible boot priority to prevent 100% brightness flashes during startup.
+  on_boot:
+    - priority: 900.0
+      then:
+        - output.set_level:
+            id: dac_raw_output
+            level: 1.0  # 1.0 raw == 2.7V == logical 0% (inverted mapping)
+        - switch.turn_off: recom_boot_toggle
+    # After normal startup, restore the user's last intended brightness if the light was on.
+    - priority: -100.0
+      then:
+        - script.execute:
+            id: apply_brightness
+            force: false
+
+# Set the interval to bundle brightness adjustments into one flash write
+preferences:
+  flash_write_interval: 1min
+
+globals:
+  - id: intended_brightness
+    type: float
+    restore_value: true
+    initial_value: '0.0'
+
+  - id: light_is_on
+    type: bool
+    restore_value: true
+    initial_value: 'false'
+
+  - id: ambient_control_enabled
+    type: bool
+    restore_value: true
+    initial_value: 'false'
+
+  - id: thermal_scale
+    type: float
+    restore_value: false
+    initial_value: '1.0'
+
+  - id: emergency_shutdown
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+
+  # Last brightness we ourselves asked the light to display (post-correction).
+  # Used to distinguish our own programmatic light.turn_on calls from external
+  # (Home Assistant / user) ones, so HA-driven changes correctly update
+  # the persisted "intended" brightness.
+  - id: last_commanded_brightness
+    type: float
+    restore_value: false
+    initial_value: '-1.0'
+
+  # --- THERMAL CONTROL ---
+  # Test values (verifiable at normal operating temperature):
+  #   throttle_start = 30°C, emergency_shutdown = 36°C
+  # Production values (per spec):
+  #   throttle_start = 50°C, emergency_shutdown = 56°C
+  - id: thermal_throttle_start_c
+    type: float
+    restore_value: false
+    initial_value: '50.0'
+
+  - id: thermal_shutdown_c
+    type: float
+    restore_value: false
+    initial_value: '56.0'
+
+  # Set by the TMP102 handler when thermal_scale or emergency_shutdown
+  # changes, so apply_brightness only re-runs on actual transitions.
+  - id: thermal_changed
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+
+  # --- AMBIENT CONTROL TUNING (exposed to HA) ---
+  # Maximum dim ratio applied when the room is at its darkest. Multiplicative
+  # against intended brightness. 1.0 effectively disables the dimming effect.
+  - id: ambient_max_dim
+    type: float
+    restore_value: true
+    initial_value: '0.50'
+
+  # Hard minimum output when ambient correction would otherwise dim further.
+  # Never pushes the output above what the user actually asked for.
+  - id: ambient_output_floor
+    type: float
+    restore_value: true
+    initial_value: '0.20'
+
+  # Lux at and above which no dimming is applied (full intended brightness).
+  - id: ambient_upper_lux
+    type: float
+    restore_value: true
+    initial_value: '1150.0'
+
+  # Curve shape: 0 = aggressive (linear), 1 = balanced (sqrt), 2 = gentle (log).
+  - id: ambient_curve
+    type: int
+    restore_value: true
+    initial_value: '1'
+
+number:
+  - platform: template
+    name: "Brightness Step Count"
+    id: step_count
+    entity_category: config
+    min_value: 4
+    max_value: 10
+    step: 1
+    initial_value: 4
+    restore_value: true
+    mode: slider
+    optimistic: true
+
+  # --- AMBIENT TUNING ---
+  - platform: template
+    name: "Ambient Max Dim"
+    id: ambient_max_dim_number
+    icon: "mdi:brightness-4"
+    entity_category: config
+    min_value: 30
+    max_value: 90
+    step: 5
+    unit_of_measurement: "%"
+    mode: slider
+    optimistic: false
+    update_interval: 1s
+    lambda: 'return id(ambient_max_dim) * 100.0f;'
+    set_action:
+      - lambda: |-
+          float v = x / 100.0f;
+          if (v < 0.30f) v = 0.30f;
+          if (v > 1.0f)  v = 1.0f;
+          if (fabsf(v - id(ambient_max_dim)) < 0.001f) return;
+          id(ambient_max_dim) = v;
+      - script.execute: ensure_ambient_enabled
+
+  - platform: template
+    name: "Ambient Output Floor"
+    id: ambient_output_floor_number
+    icon: "mdi:brightness-3"
+    entity_category: config
+    min_value: 5
+    max_value: 35
+    step: 1
+    unit_of_measurement: "%"
+    mode: slider
+    optimistic: false
+    update_interval: 1s
+    lambda: 'return id(ambient_output_floor) * 100.0f;'
+    set_action:
+      - lambda: |-
+          float v = x / 100.0f;
+          if (v < 0.05f) v = 0.05f;
+          if (v > 0.35f) v = 0.35f;
+          if (fabsf(v - id(ambient_output_floor)) < 0.001f) return;
+          id(ambient_output_floor) = v;
+      - script.execute: ensure_ambient_enabled
+
+  - platform: template
+    name: "Ambient Upper Lux"
+    id: ambient_upper_lux_number
+    icon: "mdi:weather-sunny"
+    entity_category: config
+    min_value: 200
+    max_value: 2000
+    step: 50
+    unit_of_measurement: "lx"
+    mode: slider
+    optimistic: false
+    update_interval: 1s
+    lambda: 'return id(ambient_upper_lux);'
+    set_action:
+      - lambda: |-
+          float v = x;
+          if (v < 200.0f)  v = 200.0f;
+          if (v > 2000.0f) v = 2000.0f;
+          if (fabsf(v - id(ambient_upper_lux)) < 0.5f) return;
+          id(ambient_upper_lux) = v;
+      - script.execute: ensure_ambient_enabled
+# --- HARDWARE BUSES ---
+i2c:
+  sda: GPIO7
+  scl: GPIO6
+  scan: true
+
+esp32_touch:
+  setup_mode: false
+  measurement_duration: 0.25ms
+  sleep_duration: 0.5ms
+
+# --- OUTPUTS ---
+output:
+  # Physical DAC pin (raw 0..1 corresponds to 0..2.7V).
+  # We feed it through a template output so we can invert and apply gamma+thermal scaling.
+  - platform: esp32_dac
+    pin: GPIO17
+    id: dac_raw_output
+
+  # Logical task-light output (0..1 brightness).
+  # Maps logical brightness onto the RECOM Vref driver's linear control region:
+  #   driver_voltage = 0.13 V  -> 100% LED current
+  #   driver_voltage = 2.60 V  -> 0% LED current (driver fully off)
+  # The DAC is referenced to ~3.3 V (Vref pin tied to 3V3 on the QT Py S2),
+  # so DAC raw = driver_voltage / 3.3 V.
+  - platform: template
+    id: task_light_output
+    type: float
+    write_action:
+      - lambda: |-
+          // Mirror the proven Python mapping:
+          //   normalized_brightness = brightness * thermal_scale          (0..1)
+          //   scaled = 1 - normalized^2                                    (0..1, inverted curve)
+          //   dac_value (16-bit) = scaled * DAC_BRIGHTNESS_FLOOR
+          //   if brightness == 0  -> dac_value = DAC_OFF_VALUE (full scale = OFF)
+          //
+          // ESPHome's esp32_dac takes a normalized 0..1 raw value where 1.0 maps to
+          // the DAC's full-scale output, which on the ESP32-S2 corresponds to the
+          // CircuitPython value 65535. So:
+          //   DAC_BRIGHTNESS_FLOOR / 65535 = 55000 / 65535 ~= 0.83924
+          //   DAC_OFF_VALUE        / 65535 = 1.0
+          const float DAC_BRIGHTNESS_FLOOR_NORM = 55000.0f / 65535.0f;
+
+          float requested = state;
+          if (id(emergency_shutdown)) requested = 0.0f;
+          float corrected = requested * id(thermal_scale);
+          if (corrected < 0.0f) corrected = 0.0f;
+          if (corrected > 1.0f) corrected = 1.0f;
+
+          float raw;
+          if (corrected <= 0.0f) {
+            raw = 1.0f;  // explicit OFF sentinel (= 65535 in 16-bit space)
+          } else {
+            float scaled = 1.0f - (corrected * corrected);  // perceptual curve
+            raw = scaled * DAC_BRIGHTNESS_FLOOR_NORM;
+          }
+          if (raw < 0.0f) raw = 0.0f;
+          if (raw > 1.0f) raw = 1.0f;
+          id(dac_raw_output).set_level(raw);
+
+# --- LIGHTS ---
+light:
+  # Onboard status NeoPixel for troubleshooting.
+  # Use the built-in esp32_rmt_led_strip driver instead of neopixelbus to avoid
+  # the NeoPixelBus 2.8.0 vs. ESP-IDF 5.x I2S register incompatibility.
+  - platform: esp32_rmt_led_strip
+    channel_colors: GRB
+    chipset: WS2812
+    pin: GPIO39
+    num_leds: 1
+    name: "Status NeoPixel"
+    id: status_neopixel
+    restore_mode: ALWAYS_OFF
+    default_transition_length: 200ms
+    entity_category: diagnostic
+
+
+  # High-power monochromatic Task Light exposed to Home Assistant
+  - platform: monochromatic
+    output: task_light_output
+    name: "Task Light"
+    id: task_light
+    gamma_correct: 1.0          # Perceptual curve is applied in task_light_output.
+    default_transition_length: 250ms
+    restore_mode: RESTORE_DEFAULT_OFF
+    on_turn_on:
+      - switch.turn_on: recom_boot_toggle
+      - lambda: 'id(light_is_on) = true;'
+    on_turn_off:
+      - lambda: 'id(light_is_on) = false;'
+      - delay: 300ms
+      - switch.turn_off: recom_boot_toggle
+    on_state:
+      # Capture user-originated brightness changes (HA slider, light.turn_on
+      # service calls) into id(intended_brightness). Programmatic calls from
+      # our scripts always set id(last_commanded_brightness) *before*
+      # calling light.turn_on, so we can distinguish them and skip them.
+      # on_state fires for EVERY change including brightness, not just on/off,
+      # which is why this hook is correct (on_turn_on would miss slider moves).
+      - lambda: |-
+          if (!id(task_light).remote_values.is_on()) {
+            // Light is off - nothing to capture; clear the tracker.
+            id(last_commanded_brightness) = -1.0f;
+            return;
+          }
+          float b = id(task_light).remote_values.get_brightness();
+          float last = id(last_commanded_brightness);
+          bool is_script_originated = (last >= 0.0f) &&
+                                      (fabsf(b - last) < 0.005f);
+          if (!is_script_originated && b > 0.0f) {
+            id(intended_brightness) = b;
+          }
+          id(last_commanded_brightness) = -1.0f;
+# --- SWITCHES ---
+switch:
+  - platform: gpio
+    pin: GPIO38
+    id: neopixel_power
+    name: "NeoPixel Power"
+    restore_mode: ALWAYS_ON
+    internal: true
+
+  - platform: gpio
+    pin: GPIO16
+    id: recom_boot_toggle
+    name: "Driver Power Toggle"
+    restore_mode: RESTORE_DEFAULT_OFF
+    internal: true
+
+  # Ambient Light Control toggle (persisted, defaults OFF)
+  - platform: template
+    name: "Ambient Light Control"
+    id: ambient_control_switch
+    icon: "mdi:brightness-auto"
+    restore_mode: RESTORE_DEFAULT_OFF
+    lambda: 'return id(ambient_control_enabled);'
+    turn_on_action:
+      - lambda: 'id(ambient_control_enabled) = true;'
+      - script.execute:
+          id: apply_brightness
+          force: false
+    turn_off_action:
+      - lambda: 'id(ambient_control_enabled) = false;'
+      - script.execute:
+          id: apply_brightness
+          force: false
+
+sensor:
+  # VEML7700 Ambient Light Sensor
+  - platform: veml7700
+    address: 0x10
+    update_interval: 1s
+    glass_attenuation_factor: 1.0
+    ambient_light:
+      name: "Ambient light"
+      id: ambient_light
+      filters:
+        - sliding_window_moving_average:
+            window_size: 6
+            send_every: 2
+      on_value:
+        then:
+          - if:
+              condition:
+                lambda: 'return id(ambient_control_enabled);'
+              then:
+                - script.execute:
+                    id: apply_brightness
+                    force: false
+  - platform: tmp102
+    address: 0x48
+    name: "Internal Temperature"
+    id: internal_temp
+    update_interval: 5s
+    on_value:
+      then:
+        - lambda: |-
+            const float t           = x;
+            const float t_throttle  = id(thermal_throttle_start_c);
+            const float t_shutdown  = id(thermal_shutdown_c);
+            const float prev_scale  = id(thermal_scale);
+            const bool  prev_emerg  = id(emergency_shutdown);
+
+            if (t >= t_shutdown) {
+              // Emergency shutdown: cut the driver gate immediately.
+              // This is the only place that bypasses the normal light pipeline.
+              id(emergency_shutdown) = true;
+              id(thermal_scale) = 0.0f;
+              id(recom_boot_toggle).turn_off();
+            } else if (t >= t_throttle) {
+              // Proportional throttle between throttle_start (100%) and shutdown (0%).
+              id(emergency_shutdown) = false;
+              float range = t_shutdown - t_throttle;
+              float scale = (range > 0.0f) ? (1.0f - ((t - t_throttle) / range)) : 0.0f;
+              if (scale < 0.0f) scale = 0.0f;
+              if (scale > 1.0f) scale = 1.0f;
+              id(thermal_scale) = scale;
+              // Re-enable the driver if it was killed by a previous emergency
+              // and the light is logically on.
+              if (id(light_is_on)) id(recom_boot_toggle).turn_on();
+            } else {
+              // Below throttle threshold: full power.
+              id(emergency_shutdown) = false;
+              id(thermal_scale) = 1.0f;
+              if (id(light_is_on)) id(recom_boot_toggle).turn_on();
+            }
+
+            // Publish Problem state to HA whenever throttling or shutdown is active.
+            bool problem = id(emergency_shutdown) || (id(thermal_scale) < 1.0f);
+            id(thermal_warning).publish_state(problem);
+
+            // Only re-run the brightness pipeline if the correction
+            // actually changed - avoids unnecessary 1.5 s transitions
+            // on every 5 s sensor tick while the lamp is cool and stable.
+            id(thermal_changed) = (id(thermal_scale) != prev_scale) ||
+                                  (id(emergency_shutdown) != prev_emerg);
+        - if:
+            condition:
+              lambda: 'return id(thermal_changed);'
+            then:
+              - script.execute:
+                  id: apply_brightness
+                  force: true
+
+  # Read-only diagnostic: the user's intended brightness as a percentage,
+  # before any ambient or thermal correction.
+  - platform: template
+    name: "Intended Brightness"
+    id: intended_brightness_sensor
+    icon: "mdi:brightness-percent"
+    entity_category: diagnostic
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    update_interval: 1s
+    lambda: 'return id(intended_brightness) * 100.0f;'
+
+  # Read-only diagnostic: the actual brightness being sent to the LED driver,
+  # after ambient ceiling, output floor, and thermal scaling. This is what
+  # the lamp is physically producing right now.
+  - platform: template
+    name: "Output Brightness"
+    id: output_brightness_sensor
+    icon: "mdi:lightbulb-on-outline"
+    entity_category: diagnostic
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    update_interval: 1s
+    lambda: |-
+      // When the light is off, output is genuinely 0 regardless of any
+      // residual values in the pipeline.
+      if (!id(task_light).remote_values.is_on()) return 0.0f;
+      // The light platform's "remote values" brightness IS the post-ambient,
+      // post-floor value (that's what apply_brightness commands). Apply
+      // thermal scaling on top of it to mirror exactly what task_light_output
+      // produces.
+      float logical = id(task_light).remote_values.get_brightness();
+      if (id(emergency_shutdown)) return 0.0f;
+      float corrected = logical * id(thermal_scale);
+      if (corrected < 0.0f) corrected = 0.0f;
+      if (corrected > 1.0f) corrected = 1.0f;
+      return corrected * 100.0f;
+
+# --- BINARY SENSORS ---
+binary_sensor:
+  - platform: esp32_touch
+    name: "Power Button"
+    pin: GPIO9
+    threshold: 20000
+    id: btn_power
+    entity_category: diagnostic
+    on_press:
+      then:
+        - if:
+            condition:
+              lambda: 'return id(task_light).remote_values.is_on();'
+            then:
+              - light.turn_off:
+                  id: task_light
+                  transition_length: 250ms
+            else:
+              - light.turn_on:
+                  id: task_light
+                  brightness: !lambda |-
+                    float b = id(intended_brightness);
+                    if (b <= 0.0f) b = 1.0f / (float) id(step_count).state;
+                    return b;
+                  transition_length: 250ms
+
+  - platform: esp32_touch
+    name: "Increase Button"
+    pin: GPIO5
+    threshold: 20000
+    id: btn_increase
+    entity_category: diagnostic
+    on_press:
+      then:
+        # If both increase and decrease are held, toggle ambient light control instead.
+        - if:
+            condition:
+              binary_sensor.is_on: btn_decrease
+            then:
+              - switch.toggle: ambient_control_switch
+            else:
+              # Restricted action feedback: if throttling is active, perform "double-dip" pulse
+              - if:
+                  condition:
+                    lambda: 'return id(thermal_scale) < 1.0f || id(emergency_shutdown);'
+                  then:
+                    - script.execute: throttle_restricted_pulse
+                  else:
+                    - script.execute: brightness_step_up
+
+  - platform: esp32_touch
+    name: "Decrease Button"
+    pin: GPIO8
+    threshold: 20000
+    id: btn_decrease
+    entity_category: diagnostic
+    on_press:
+      then:
+        - if:
+            condition:
+              binary_sensor.is_on: btn_increase
+            then:
+              - switch.toggle: ambient_control_switch
+            else:
+              - script.execute: brightness_step_down
+
+  - platform: template
+    name: "Lamp Thermal Throttling"
+    id: thermal_warning
+    device_class: problem
+    entity_category: diagnostic
+
+
+select:
+  - platform: template
+    name: "Ambient Curve"
+    id: ambient_curve_select
+    icon: "mdi:chart-bell-curve"
+    entity_category: config
+    optimistic: false
+    options:
+      - "Aggressive"
+      - "Balanced"
+      - "Gentle"
+    update_interval: 1s
+    lambda: |-
+      switch (id(ambient_curve)) {
+        case 0:  return std::string("Aggressive");
+        case 2:  return std::string("Gentle");
+        default: return std::string("Balanced");
+      }
+    set_action:
+      - lambda: |-
+          int prev = id(ambient_curve);
+          int next = prev;
+          if      (x == "Aggressive") next = 0;
+          else if (x == "Gentle")     next = 2;
+          else                        next = 1;  // Balanced
+          if (next == prev) return;
+          id(ambient_curve) = next;
+      - script.execute: ensure_ambient_enabled
+script:
+  # When a user adjusts any ambient tuning entity, auto-enable ambient
+  # control if it isn't already active so the change takes effect
+  # immediately. Also explicitly publishes the switch state to HA for
+  # instant UI sync (rather than waiting for the 1s polling lambda).
+  - id: ensure_ambient_enabled
+    mode: single
+    then:
+      - if:
+          condition:
+            lambda: 'return !id(ambient_control_enabled);'
+          then:
+            - lambda: 'id(ambient_control_enabled) = true;'
+            - lambda: 'id(ambient_control_switch).publish_state(true);'
+      - script.execute:
+          id: apply_brightness
+          force: false
+  # Re-apply the current intended brightness through the corrected pipeline.
+  # Used after thermal updates and ambient light changes.
+  - id: apply_brightness
+    mode: restart
+    parameters:
+      force: bool
+    then:
+      - if:
+          condition:
+            lambda: 'return id(light_is_on) && id(task_light).remote_values.is_on();'
+          then:
+            - lambda: |-
+                float b = id(intended_brightness);
+                if (id(ambient_control_enabled) && !isnan(id(ambient_light).state)) {
+                  const float lux       = id(ambient_light).state;
+                  const float low_lux   = 10.0f;
+                  const float high_lux  = id(ambient_upper_lux);
+                  const float max_dim   = id(ambient_max_dim);   // ceiling at darkest
+                  const float out_floor = id(ambient_output_floor);
+                  const int   curve     = id(ambient_curve);
+
+                  // Compute ceiling: max_dim at <= low_lux, 1.0 at >= high_lux,
+                  // shaped by the selected curve in between.
+                  float ceiling;
+                  if (lux <= low_lux) {
+                    ceiling = max_dim;
+                  } else if (lux >= high_lux) {
+                    ceiling = 1.0f;
+                  } else {
+                    float t;  // normalized 0..1 position between breakpoints
+                    switch (curve) {
+                      case 0:  // Aggressive — linear in lux
+                        t = (lux - low_lux) / (high_lux - low_lux);
+                        break;
+                      case 2:  // Gentle — log10 in lux
+                        t = (log10f(lux) - log10f(low_lux)) /
+                            (log10f(high_lux) - log10f(low_lux));
+                        break;
+                      case 1:  // Balanced — sqrt of linear, perception-shaped
+                      default:
+                        t = sqrtf((lux - low_lux) / (high_lux - low_lux));
+                        break;
+                    }
+                    if (t < 0.0f) t = 0.0f;
+                    if (t > 1.0f) t = 1.0f;
+                    ceiling = max_dim + t * (1.0f - max_dim);
+                  }
+
+                  // Apply ceiling, then hard floor, but never raise output
+                  // above what the user requested.
+                  float dimmed = b * ceiling;
+                  float eff_floor = (out_floor < b) ? out_floor : b;
+                  b = (dimmed > eff_floor) ? dimmed : eff_floor;
+                }
+                if (b < 0.01f) b = 0.01f;
+                if (b > 1.0f)  b = 1.0f;
+
+                float current = id(task_light).remote_values.get_brightness();
+                if (!force && fabsf(b - current) < 0.01f) {
+                  id(last_commanded_brightness) = -1.0f;
+                  return;
+                }
+                id(last_commanded_brightness) = b;
+            - if:
+                condition:
+                  lambda: 'return id(last_commanded_brightness) >= 0.0f;'
+                then:
+                  - light.turn_on:
+                      id: task_light
+                      brightness: !lambda 'return id(last_commanded_brightness);'
+                      transition_length: 1500ms
+
+  - id: brightness_step_up
+    mode: single
+    then:
+      - lambda: |-
+          int steps = (int) id(step_count).state;
+          if (steps < 1) steps = 4;
+          float increment = 1.0f / (float) steps;
+          float current = id(intended_brightness);
+          if (!id(task_light).remote_values.is_on()) current = 0.0f;
+          float next = current + increment;
+          if (next > 1.0f) next = 1.0f;
+          id(intended_brightness) = next;
+          id(last_commanded_brightness) = next;
+      - light.turn_on:
+          id: task_light
+          brightness: !lambda 'return id(intended_brightness);'
+          transition_length: 250ms
+
+  - id: brightness_step_down
+    mode: single
+    then:
+      - lambda: |-
+          int steps = (int) id(step_count).state;
+          if (steps < 1) steps = 4;
+          float decrement = 1.0f / (float) steps;
+          float minimum  = 1.0f / (float) steps;
+          float current  = id(intended_brightness);
+          float next     = current - decrement;
+          if (next < minimum) next = minimum;
+          id(intended_brightness) = next;
+          id(last_commanded_brightness) = next;
+      - light.turn_on:
+          id: task_light
+          brightness: !lambda 'return id(intended_brightness);'
+          transition_length: 250ms
+
+  - id: throttle_restricted_pulse
+    mode: restart
+    then:
+      - if:
+          condition:
+            lambda: 'return id(task_light).remote_values.is_on();'
+          then:
+            - lambda: 'id(last_commanded_brightness) = 0.30f;'
+            - light.turn_on:
+                id: task_light
+                brightness: 30%
+                transition_length: 150ms
+            - delay: 150ms
+            - lambda: 'id(last_commanded_brightness) = id(intended_brightness);'
+            - light.turn_on:
+                id: task_light
+                brightness: !lambda 'return id(intended_brightness);'
+                transition_length: 150ms
+            - delay: 200ms
+            - lambda: 'id(last_commanded_brightness) = 0.30f;'
+            - light.turn_on:
+                id: task_light
+                brightness: 30%
+                transition_length: 150ms
+            - delay: 150ms
+            - lambda: 'id(last_commanded_brightness) = id(intended_brightness);'
+            - light.turn_on:
+                id: task_light
+                brightness: !lambda 'return id(intended_brightness);'
+                transition_length: 150ms

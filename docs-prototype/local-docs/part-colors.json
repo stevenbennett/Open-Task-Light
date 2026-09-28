@@ -1,0 +1,23 @@
+{
+  "_how": "Colours follow the part name, so a part looks the same on every page. Names are normalized (lowercase, plurals and '(1x)' stripped, '5x8mm' -> '5x8 mm'). Pin a part to a named colour here (the build lists the colour names if you use one it doesn't know); everything else is assigned automatically so that parts sharing a photo never share a colour. See .build/part-colors.generated.json for what was chosen.",
+  "pins": {
+    "M5x8 mm screw": "red",
+    "M5 screw": "red",
+    "M3x10 mm screw": "green",
+    "M2x6 mm flat head screw": "blue",
+    "spring-loaded tee nut": "amber",
+    "power track": "orange",
+    "control board": "violet",
+    "LED": "cyan"
+  },
+  "aliases": {
+    "m5x8 screw": "m5x8 mm screw",
+    "tee nut": "spring-loaded tee nut",
+    "spring loaded tee nut": "spring-loaded tee nut",
+    "micro-lock cable": "microlock cable",
+    "100 mm micro-lock cable": "100 mm microlock cable",
+    "150 mm micro-lock cable": "150 mm microlock cable",
+    "450 mm micro-lock cable": "450 mm microlock cable",
+    "75 mm micro-lock cable": "75 mm microlock cable"
+  }
+}

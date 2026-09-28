@@ -1,0 +1,3 @@
+# Carriage
+
+<table data-view="cards"><thead><tr><th></th><th data-hidden data-card-target data-type="content-ref"></th><th data-hidden data-card-cover data-type="image">Cover image</th></tr></thead><tbody><tr><td>Carriage Body</td><td><a href="/open-task-light/printing-guide/carriage/carriage-body.md">Carriage Body</a></td><td><a href="/images/2d45da816f65.png">Screenshot 2026-05-03 at 10.19.18 PM.png</a></td></tr><tr><td>Carriage Clip</td><td><a href="/open-task-light/printing-guide/carriage/carriage-clip.md">Carriage Clip</a></td><td><a href="/images/faa69289ff2b.png">carriage clip.png</a></td></tr></tbody></table>

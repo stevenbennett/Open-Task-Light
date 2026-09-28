@@ -1,0 +1,16 @@
+{
+  "name": "otl-local-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch": "node fetch.mjs",
+    "build": "node build.mjs",
+    "serve": "python3 -m http.server 8790 --bind 127.0.0.1 --directory .build/site",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "entities": "^8.1.0",
+    "markdown-it": "^14",
+    "markdown-it-footnote": "^4.0.0"
+  }
+}

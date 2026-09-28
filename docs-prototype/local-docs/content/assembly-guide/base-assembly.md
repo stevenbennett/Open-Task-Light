@@ -1,0 +1,5 @@
+# Base Assembly
+
+### Choose your base style
+
+<table data-card-size="large" data-view="cards"><thead><tr><th></th><th data-hidden data-card-cover data-type="image">Cover image</th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td><a href="/open-task-light/assembly-guide/base-assembly/freestanding-base/assembling-the-freestanding-base.md">Freestanding Base</a></td><td><a href="/images/1dda80ffb3b2.jpg">Capture One Catalog0854.jpg</a></td><td><a href="/open-task-light/assembly-guide/base-assembly/freestanding-base/assembling-the-freestanding-base.md">Assembling the freestanding base</a></td></tr><tr><td><a href="/open-task-light/assembly-guide/base-assembly/clamping-base/assembling-the-clamping-base.md">Clamping Base</a></td><td><a href="/images/772455818f7c.jpg">Capture One Catalog0875.jpg</a></td><td><a href="/open-task-light/assembly-guide/base-assembly/clamping-base/assembling-the-clamping-base.md">Assembling the clamping base</a></td></tr></tbody></table>

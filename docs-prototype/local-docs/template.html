@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}} | Open Task Light</title>
+<link rel="icon" href="/assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+<header class="header">
+  <a class="brand" href="/start-here/"><img src="/assets/logo.png" alt="">Open Task Light</a>
+  <div class="search" aria-hidden="true"><span>Search...</span><kbd>⌘</kbd><kbd>K</kbd></div>
+  <div class="tools"><span>{{NOTE}}</span>
+    <div class="proto-mode" role="radiogroup" aria-label="Callout style">
+      <label><input type="radio" name="mode" value="leaders" checked> Leaders</label>
+      <label><input type="radio" name="mode" value="dots"> Dots</label>
+      <label><input type="radio" name="mode" value="off"> Off</label>
+    </div>
+  </div>
+</header>
+<div class="site">
+  <nav class="sidebar" aria-label="Guide">{{NAV}}<a class="powered" href="https://open-task-light.gitbook.io/open-task-light">Powered by GitBook</a></nav>
+  <main class="content">
+    <p class="crumbs">{{CRUMBS}}</p>
+    {{BODY}}
+    <div class="pager">{{PREV}}{{NEXT}}</div>
+  </main>
+  <aside class="onpage" aria-label="On this page"><div class="onpage-title">On this page</div><ul>{{TOC}}</ul></aside>
+</div>
+<template id="tooltip-tpl"><div class="tip" role="tooltip"><div class="tip-head"><span class="tip-dot"></span><span class="tip-label"></span></div><div class="tip-qty"></div><p class="tip-detail"></p><div class="tip-links"></div></div></template>
+<script src="/assets/annotate.js" defer></script>
+<script>
+  document.querySelectorAll('.sidebar .chev').forEach(b => b.addEventListener('click', () => b.closest('li').classList.toggle('open')));
+  // highlight the section in view in "On this page"
+  const tocLinks = [...document.querySelectorAll('.onpage a')];
+  const heads = tocLinks.map(a => document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
+  const io = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) { tocLinks.forEach(a => a.parentElement.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id)); } }); }, { rootMargin: '-80px 0px -70% 0px' });
+  heads.forEach(h => io.observe(h));
+</script>
+</body>
+</html>

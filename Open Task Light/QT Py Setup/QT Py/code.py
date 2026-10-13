@@ -34,6 +34,7 @@ switch_control.value = False
 dac_out = AnalogOut(board.A1)
 # SET THE LED DRIVER OUTPUT OFF
 dac_out.value = DAC_OFF_VALUE
+current_dac_value = DAC_OFF_VALUE # last value written to the DAC. fades start from here
 
 
 # TURN THE IC SWITCH OFF, TURNING CONTROL OVER TO THE QTPY
@@ -43,9 +44,13 @@ switch_control.value = True
 i2c = busio.I2C(board.SCL, board.SDA)
 
 # INITIALIZE SENSORS
-# LIGHT SENSOR (VEML7700)
-light_sensor = adafruit_veml7700.VEML7700(i2c)
-light_sensor.integration_time = 100
+# LIGHT SENSOR (VEML7700). only used for auto brightness, so the lamp still works without it
+try:
+    light_sensor = adafruit_veml7700.VEML7700(i2c)
+    light_sensor.light_integration_time = adafruit_veml7700.VEML7700.ALS_100MS
+except (OSError, ValueError) as e:
+    light_sensor = None
+    print(f"Light sensor not found, auto brightness disabled: {e}")
 
 # TMP75 Temperature sensor
 temp_sensor = TMP75(i2c)
@@ -88,6 +93,7 @@ LIGHT_SENSOR_MIN = 1
 # internal temps can reach 56c if DEFAULT_POWER_OUTPUT is 100. haven't test at 90 or below.
 HIGH_TEMP = 50
 MAX_TEMP = 56
+TEMP_READ_ATTEMPTS = 3 # a reading that still fails after this many tries is treated as too hot
 
 # CAPACITIVE TOUCH THRESHOLD, INCREASE IF TOO SENSITIVE
 power_button_raw.threshold = 20000
@@ -130,8 +136,9 @@ class AmbientBrightness:
         return self.sensor.lux
 
 
-    def get_brightness_percentage(self): #converts the lux value to a scaled value then to a percentage to compare to user_brightness
-        lux = self.sensor.lux
+    def get_brightness_percentage(self, lux=None): #converts the lux value to a scaled value then to a percentage to compare to user_brightness
+        if lux is None:
+            lux = self.sensor.lux
         shifted_lux = lux - self.min_value + 1  
         normalized_lux = shifted_lux / (self.max_value - self.min_value + 1)
         scaled_brightness = (math.log(normalized_lux * 9 + 1) / math.log(10)) * 100
@@ -145,19 +152,25 @@ output_brightness = Brightness(0)
 ambient_brightness = AmbientBrightness(light_sensor, LIGHT_SENSOR_MIN, LIGHT_SENSOR_MAX)
 
 
-def get_temperature():
-    # debugging
-    print(f"Temperature: {temp_sensor.temperature_in_C}°C")
-
-    return temp_sensor.temperature_in_C
+def get_temperature(): # returns None if the sensor can't be read
+    for _ in range(TEMP_READ_ATTEMPTS):
+        try:
+            temperature = temp_sensor.temperature_in_C
+        except OSError as e:
+            print(f"Temperature read failed: {e}")
+            continue
+        # debugging
+        print(f"Temperature: {temperature}°C")
+        return temperature
+    return None
 
 def set_output_brightness(target_brightness, duration=FADE_DURATION):
-    global output_brightness
+    global output_brightness, current_dac_value
     step_duration = duration / FADE_STEPS
 
-    # manually set some end points if start or end value is "off" for smoother tranistions
-    start_value = DAC_OFF_VALUE if output_brightness.flat_percentage == 0 else output_brightness.as_driver_output()
-    end_value = DAC_OFF_VALUE if target_brightness.flat_percentage == 0 else target_brightness.as_driver_output()
+    # fade from the value the DAC is actually at, so a change in POWER_OUTPUT_LIMIT fades instead of jumping
+    start_value = current_dac_value
+    end_value = target_brightness.as_driver_output()
 
     for step in range(FADE_STEPS + 1):
         fraction = step / FADE_STEPS
@@ -165,6 +178,7 @@ def set_output_brightness(target_brightness, duration=FADE_DURATION):
         dac_out.value = current_value
         time.sleep(step_duration)
 
+    current_dac_value = end_value
     output_brightness = target_brightness
 
     # debugging
@@ -172,11 +186,20 @@ def set_output_brightness(target_brightness, duration=FADE_DURATION):
 
 def handle_auto_brightness():
     global user_brightness
-    ambient_percentage = ambient_brightness.get_brightness_percentage()
+    if light_sensor is None:
+        return
+    try:
+        lux = ambient_brightness.update() # None until 2 seconds have passed since the last reading
+    except OSError as e:
+        print(f"Light sensor read failed: {e}")
+        return
+    if lux is None:
+        return
+    ambient_percentage = ambient_brightness.get_brightness_percentage(lux)
     new_brightness = user_brightness.flat_percentage  # start with current brightness
 
     # debugging
-    print(f"Comparing user brightness ({user_brightness.flat_percentage}) to ambient brightness ({ambient_brightness.get_brightness_percentage()}) at {ambient_brightness.sensor.lux}lux")
+    print(f"Comparing user brightness ({user_brightness.flat_percentage}) to ambient brightness ({ambient_percentage}) at {lux}lux")
 
     if ambient_percentage >= new_brightness + STEP:
         new_brightness = min(new_brightness + STEP, MAX_BRIGHTNESS)
@@ -197,13 +220,14 @@ def handle_power_button():
             set_output_brightness(Brightness(0))
             _power = False
         else:
-            # if get_temperature() < MAX_TEMP:
+            temperature = get_temperature()
+            if temperature is None or temperature >= MAX_TEMP:
+                print("Temperature too high or unreadable, not turning on the lamp")
+                return
             print("Turning on")
             set_output_brightness(user_brightness)
             last_temp_check = 0
             _power = True
-            # else:
-            #     print("Temperature too high to turn on the lamp")
 
 def handle_increase_button():
     global user_brightness
@@ -232,13 +256,14 @@ def check_temperature():
     last_temp_check = time.monotonic()
 
     temperature = get_temperature()
-    # if temperature reaches or exceeds MAX_TEMP, turn the lamp off
-    if temperature >= MAX_TEMP and _power:
-        # debugging
-        # print(f"Temperature {temperature: }C >= MAX_TEMP. Turning off lamp.")
+    # if temperature reaches or exceeds MAX_TEMP, or the sensor can't be read, turn the lamp off
+    if temperature is None or temperature >= MAX_TEMP:
+        if _power:
+            # debugging
+            # print(f"Temperature {temperature: }C >= MAX_TEMP. Turning off lamp.")
 
-        set_output_brightness(Brightness(0))
-        _power = False
+            set_output_brightness(Brightness(0))
+            _power = False
         return
 
     if temperature_scaling:
